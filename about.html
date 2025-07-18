@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <title>About Us - AMTECH</title>
+    <style>
+        body{
+            background-color: #000;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        }
+        
+        /* Main content container */
+        .main-content {
+            min-height: 100vh;
+            position: relative;
+            padding-top: 100px;
+        }
+        
+        nav{
+            width: 100vh;
+            height: 10vh;
+            position: fixed;
+            top: 0;
+            margin: auto;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 50px;
+            font-size: 20px;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            margin: auto;
+            z-index: 100;
+            opacity: 0;
+            transform: translateY(-50px);
+            transition: all 1s ease;
+        }
+        
+        nav.show{
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        nav ul{
+            list-style: none;
+            display: flex;
+            gap: 30px;
+            margin: 0;
+            padding: 0;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 999;
+        }
+        
+        nav li{
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        nav li:hover{
+            color: #00ff88;
+        }
+        
+        /* About Page Styles */
+        .about-header{
+            text-align: center;
+            margin-bottom: 80px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease;
+        }
+        
+        .about-header.show{
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .about-header h1{
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: #00ff88;
+        }
+        
+        .about-header p{
+            font-size: 1.2rem;
+            color: #ccc;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .about-content{
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s ease 0.3s;
+        }
+        
+        .about-content.show{
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .about-section{
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 50px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .about-section h2{
+            color: #00ff88;
+            font-size: 2rem;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .about-section p{
+            color: #ccc;
+            line-height: 1.8;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+        
+        .about-section p:last-child{
+            margin-bottom: 0;
+        }
+        
+        .stats-grid{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .stat-item{
+            text-align: center;
+            padding: 30px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .stat-number{
+            font-size: 3rem;
+            font-weight: bold;
+            color: #00ff88;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label{
+            color: #ccc;
+            font-size: 1.1rem;
+        }
+        
+        .values-grid{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .value-item{
+            text-align: center;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .value-icon{
+            font-size: 3rem;
+            color: #00ff88;
+            margin-bottom: 20px;
+        }
+        
+        .value-title{
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 15px;
+        }
+        
+        .value-description{
+            color: #ccc;
+            line-height: 1.6;
+        }
+        
+        /* Footer */
+        footer{
+            background: rgba(255, 255, 255, 0.05);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 50px 0;
+            margin-top: 80px;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s ease 0.6s;
+        }
+        
+        footer.show{
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .footer-content{
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+        
+        .footer-section h3{
+            color: #00ff88;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+        }
+        
+        .footer-section p,
+        .footer-section a{
+            color: #ccc;
+            text-decoration: none;
+            line-height: 1.8;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-section a:hover{
+            color: #00ff88;
+        }
+        
+        .social-links{
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .social-links a{
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover{
+            background: #00ff88;
+            color: #000;
+            transform: translateY(-3px);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .about-header h1{
+                font-size: 3rem;
+            }
+            
+            .about-section{
+                padding: 40px;
+            }
+            
+            .about-section h2{
+                font-size: 1.8rem;
+            }
+            
+            nav{
+                width: 100%;
+                padding: 0 30px;
+                font-size: 18px;
+            }
+            
+            nav ul{
+                gap: 25px;
+            }
+            
+        }
+        
+        @media (max-width: 768px) {
+            .about-header h1{
+                font-size: 2.5rem;
+            }
+            
+            .about-header p{
+                font-size: 1rem;
+            }
+            
+            .about-section{
+                padding: 30px;
+            }
+            
+            .about-section h2{
+                font-size: 1.6rem;
+            }
+            
+            .about-section p{
+                font-size: 1rem;
+            }
+            
+            .stats-grid{
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+            
+            .stat-number{
+                font-size: 2.5rem;
+            }
+            
+            .values-grid{
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            nav{
+                width: 100%;
+                height: 8vh;
+                padding: 0 20px;
+                font-size: 16px;
+            }
+            
+            nav ul{
+                gap: 20px;
+            }
+            
+        }
+        
+        @media (max-width: 480px) {
+            .about-header h1{
+                font-size: 2rem;
+            }
+            
+            .about-section{
+                padding: 20px;
+            }
+            
+            .about-section h2{
+                font-size: 1.4rem;
+            }
+            
+            .stats-grid{
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .stat-number{
+                font-size: 2rem;
+            }
+            
+            .value-icon{
+                font-size: 2.5rem;
+            }
+            
+            .value-title{
+                font-size: 1.1rem;
+            }
+            
+            nav{
+                width: 100%;
+                height: 7vh;
+                padding: 0 15px;
+                font-size: 14px;
+            }
+            
+            nav ul{
+                gap: 15px;
+            }
+            
+        }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <nav>
+            <ul>
+                <li onclick="window.location.href='index.html'">Home</li>
+                <li onclick="window.location.href='market.html'">Market</li>
+                <li onclick="window.location.href='about.html'">About</li>
+                <li onclick="window.location.href='contact.html'">Contact</li>
+            </ul>
+        </nav>
+        
+        <div class="about-header" id="aboutHeader">
+            <h1>About AMTECH</h1>
+            <p>Leading technology retailer in Algeria, delivering premium products and exceptional service across all 58 wilayas</p>
+        </div>
+        
+        <div class="about-content" id="aboutContent">
+            <div class="about-section">
+                <h2>Our Story</h2>
+                <p>AMTECH was founded in 2020 with a vision to make premium technology accessible to all Algerians. What started as a small local shop in Algiers has grown into one of Algeria's most trusted technology retailers, serving customers across all 58 wilayas.</p>
+                
+                <p>We believe that technology should enhance lives and connect people. That's why we carefully select only the highest quality products from world-renowned brands like Apple, Samsung, and other leading manufacturers. Our commitment to quality, customer service, and nationwide delivery has made us the preferred choice for technology enthusiasts and professionals alike.</p>
+                
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">58</div>
+                        <div class="stat-label">Wilayas Served</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">10K+</div>
+                        <div class="stat-label">Happy Customers</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">500+</div>
+                        <div class="stat-label">Products Available</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">Customer Support</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="about-section">
+                <h2>Our Mission</h2>
+                <p>To democratize access to premium technology products in Algeria by providing exceptional customer service, competitive pricing, and reliable delivery across the entire country. We strive to be the bridge between cutting-edge technology and Algerian consumers.</p>
+            </div>
+            
+            <div class="about-section">
+                <h2>Our Values</h2>
+                <div class="values-grid">
+                    <div class="value-item">
+                        <div class="value-icon">
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                        <div class="value-title">Quality</div>
+                        <div class="value-description">We only offer products from trusted brands with proven reliability and performance.</div>
+                    </div>
+                    
+                    <div class="value-item">
+                        <div class="value-icon">
+                            <i class="fa-solid fa-heart"></i>
+                        </div>
+                        <div class="value-title">Customer First</div>
+                        <div class="value-description">Every decision we make is centered around providing the best experience for our customers.</div>
+                    </div>
+                    
+                    <div class="value-item">
+                        <div class="value-icon">
+                            <i class="fa-solid fa-truck"></i>
+                        </div>
+                        <div class="value-title">Reliability</div>
+                        <div class="value-description">We ensure timely delivery and secure handling of all products across Algeria.</div>
+                    </div>
+                    
+                    <div class="value-item">
+                        <div class="value-icon">
+                            <i class="fa-solid fa-handshake"></i>
+                        </div>
+                        <div class="value-title">Trust</div>
+                        <div class="value-description">Building long-term relationships through transparency, honesty, and consistent service.</div>
+                    </div>
+                    
+                    <div class="value-item">
+                        <div class="value-icon">
+                            <i class="fa-solid fa-lightbulb"></i>
+                        </div>
+                        <div class="value-title">Innovation</div>
+                        <div class="value-description">Constantly evolving and adopting new technologies to better serve our customers.</div>
+                    </div>
+                    
+                    <div class="value-item">
+                        <div class="value-icon">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+                        <div class="value-title">Community</div>
+                        <div class="value-description">Supporting and contributing to the growth of Algeria's technology ecosystem.</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="about-section">
+                <h2>Why Choose AMTECH?</h2>
+                <p><strong>Nationwide Coverage:</strong> We deliver to all 58 wilayas in Algeria, ensuring no customer is left behind regardless of their location.</p>
+                
+                <p><strong>Authentic Products:</strong> All our products are 100% authentic with official warranty and after-sales support.</p>
+                
+                <p><strong>Competitive Pricing:</strong> We offer the best prices in the market while maintaining the highest quality standards.</p>
+                
+                <p><strong>Expert Support:</strong> Our team of technology experts is always ready to help you choose the right product and provide technical support.</p>
+                
+                <p><strong>Secure Payment:</strong> Multiple secure payment options including cash on delivery, bank transfer, and online payment.</p>
+                
+                <p><strong>Fast Delivery:</strong> Quick and reliable delivery service with real-time tracking and updates.</p>
+            </div>
+        </div>
+        
+        <footer id="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>AMTECH</h3>
+                    <p>Your trusted partner for premium technology products in Algeria. We deliver quality and innovation to your doorstep.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                        <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <p><a href="index.html">Home</a></p>
+                    <p><a href="market.html">Market</a></p>
+                    <p><a href="about.html">About Us</a></p>
+                    <p><a href="contact.html">Contact</a></p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <p><i class="fa-solid fa-phone"></i> +213 123 456 789</p>
+                    <p><i class="fa-solid fa-envelope"></i> info@amtech.dz</p>
+                    <p><i class="fa-solid fa-location-dot"></i> Algiers, Algeria</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Services</h3>
+                    <p>Free Delivery</p>
+                    <p>58 Wilayas Coverage</p>
+                    <p>Secure Payment</p>
+                    <p>24/7 Support</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        // Page Elements Animation
+        function startPageAnimations() {
+            const nav = document.querySelector('nav');
+            const aboutHeader = document.getElementById('aboutHeader');
+            const aboutContent = document.getElementById('aboutContent');
+            const footer = document.getElementById('footer');
+            
+            // Animate navigation first
+            setTimeout(() => {
+                nav.classList.add('show');
+            }, 100);
+            
+            // Animate about header
+            setTimeout(() => {
+                aboutHeader.classList.add('show');
+            }, 300);
+            
+            // Animate about content
+            setTimeout(() => {
+                aboutContent.classList.add('show');
+            }, 600);
+            
+            // Animate footer
+            setTimeout(() => {
+                footer.classList.add('show');
+            }, 900);
+        }
+        
+        // Start animation when page loads
+        window.addEventListener('load', startPageAnimations);
+    </script>
+</body>
+</html> 

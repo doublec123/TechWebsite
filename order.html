@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <title>Place Order - AMTECH</title>
+    <style>
+        body{
+            background-color: #000;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        }
+        
+        /* Main content container */
+        .main-content {
+            min-height: 100vh;
+            position: relative;
+            padding-top: 100px;
+        }
+        
+        nav{
+            width: 100vh;
+            height: 10vh;
+            position: fixed;
+            top: 0;
+            margin: auto;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 50px;
+            font-size: 20px;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            margin: auto;
+            z-index: 100;
+            opacity: 0;
+            transform: translateY(-50px);
+            transition: all 1s ease;
+        }
+        
+        nav.show{
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        nav ul{
+            list-style: none;
+            display: flex;
+            gap: 30px;
+            margin: 0;
+            padding: 0;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 999;
+        }
+        
+        nav li{
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        nav li:hover{
+            color: #00ff88;
+        }
+        
+        /* Order Page Styles */
+        .order-header{
+            text-align: center;
+            margin-bottom: 60px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease;
+        }
+        
+        .order-header.show{
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .order-header h1{
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: #00ff88;
+        }
+        
+        .order-header p{
+            font-size: 1.2rem;
+            color: #ccc;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .order-content{
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s ease 0.3s;
+        }
+        
+        .order-content.show{
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .order-container{
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 50px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .product-summary{
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .product-summary h3{
+            color: #00ff88;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .product-details{
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .product-detail{
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .product-detail:last-child{
+            border-bottom: none;
+            font-weight: bold;
+            color: #00ff88;
+            font-size: 1.2rem;
+        }
+        
+        .order-form{
+            margin-top: 40px;
+        }
+        
+        .form-section{
+            margin-bottom: 40px;
+        }
+        
+        .form-section h3{
+            color: #00ff88;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #00ff88;
+            padding-bottom: 10px;
+        }
+        
+        .form-grid{
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .form-group{
+            margin-bottom: 20px;
+        }
+        
+        .form-group.full-width{
+            grid-column: 1 / -1;
+        }
+        
+        .form-group label{
+            display: block;
+            margin-bottom: 8px;
+            color: #fff;
+            font-weight: bold;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select{
+            width: 100%;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            background: #111;
+            color: #00ff88;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+        select, select option, select:focus option {
+            background: #111 !important;
+            color: #00ff88 !important;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus{
+            outline: none;
+            border-color: #00ff88;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .form-group input::placeholder,
+        .form-group textarea::placeholder{
+            color: #999;
+        }
+        
+        .form-group input[readonly]{
+            background: rgba(255, 255, 255, 0.1);
+            color: #ccc;
+        }
+        
+        .form-group textarea{
+            height: 100px;
+            resize: vertical;
+        }
+        
+        .order-button{
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(45deg, #00ff88, #00cc6a);
+            border: none;
+            border-radius: 10px;
+            color: #000;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 30px;
+        }
+        
+        .order-button:hover{
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 255, 136, 0.3);
+        }
+        
+        .order-button:disabled{
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .loading{
+            display: none;
+            margin-top: 20px;
+            color: #00ff88;
+            text-align: center;
+        }
+        
+        .loading.show{
+            display: block;
+        }
+        
+        /* Success Overlay */
+        .success-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .success-overlay.show {
+            display: flex;
+        }
+        
+        .success-card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 90%;
+            animation: slideUp 0.5s ease;
+        }
+        
+        .success-icon {
+            font-size: 4rem;
+            color: #28a745;
+            margin-bottom: 20px;
+            animation: bounce 1s ease;
+        }
+        
+        .success-title {
+            font-size: 2rem;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        
+        .success-message {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+        
+        .success-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .success-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .success-btn.primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .success-btn.secondary {
+            background: #f8f9fa;
+            color: #333;
+            border: 2px solid #dee2e6;
+        }
+        
+        .success-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+        
+        .user-info-notice{
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid #00ff88;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 30px;
+            color: #00ff88;
+            font-size: 14px;
+        }
+        
+        .guest-user-notice{
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid #ffc107;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 30px;
+            color: #ffc107;
+            font-size: 14px;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .order-header h1{
+                font-size: 3rem;
+            }
+            
+            .form-grid{
+                grid-template-columns: 1fr;
+            }
+            
+            nav{
+                width: 100%;
+                padding: 0 30px;
+                font-size: 18px;
+            }
+            
+            nav ul{
+                gap: 25px;
+            }
+            
+            .signin-btn{
+                font-size: 16px;
+                padding: 10px 18px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .order-header h1{
+                font-size: 2.5rem;
+            }
+            
+            .order-header p{
+                font-size: 1rem;
+            }
+            
+            .order-container{
+                padding: 30px;
+            }
+            
+            .product-details{
+                grid-template-columns: 1fr;
+            }
+            
+            nav{
+                width: 100%;
+                height: 8vh;
+                padding: 0 20px;
+                font-size: 16px;
+            }
+            
+            nav ul{
+                gap: 20px;
+            }
+            
+            .signin-btn{
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .order-header h1{
+                font-size: 2rem;
+            }
+            
+            .order-container{
+                padding: 20px;
+            }
+            
+            .form-group input,
+            .form-group textarea,
+            .form-group select{
+                padding: 12px;
+                font-size: 14px;
+            }
+            
+            .order-button{
+                padding: 15px;
+                font-size: 16px;
+            }
+            
+            nav{
+                width: 100%;
+                height: 7vh;
+                padding: 0 15px;
+                font-size: 14px;
+            }
+            
+            nav ul{
+                gap: 15px;
+            }
+            
+            .signin-btn{
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <nav>
+            <ul>
+                <li onclick="window.location.href='index.html'">Home</li>
+                <li onclick="window.location.href='market.html'">Market</li>
+                <li onclick="window.location.href='about.html'">About</li>
+                <li onclick="window.location.href='contact.html'">Contact</li>
+            </ul>
+        </nav>
+        
+        <div class="order-header" id="orderHeader">
+            <h1>Place Your Order</h1>
+            <p>Complete your purchase and we'll deliver to your doorstep</p>
+        </div>
+        
+        <div class="order-content" id="orderContent">
+            <div class="order-container">
+                <div class="product-summary">
+                    <h3>Product Summary</h3>
+                    <div class="product-details">
+                        <div class="product-detail">
+                            <span>Product:</span>
+                            <span id="productName">Loading...</span>
+                        </div>
+                        <div class="product-detail">
+                            <span>Price:</span>
+                            <span id="productPrice">Loading...</span>
+                        </div>
+                        <div class="product-detail">
+                            <span>Delivery:</span>
+                            <span>Available in 58 wilayas</span>
+                        </div>
+                        <div class="product-detail">
+                            <span>Total:</span>
+                            <span id="totalPrice">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="userInfoNotice" class="user-info-notice" style="display: none;">
+                    <i class="fa-solid fa-info-circle"></i> Your information has been auto-filled from your account.
+                </div>
+                
+                <form id="orderForm" class="order-form">
+                    <div class="form-section">
+                        <h3>Personal Information</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="fullName">Full Name *</label>
+                                <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="phone">Phone Number *</label>
+                                <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="email">Email Address *</label>
+                                <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="wilaya">Wilaya *</label>
+                                <input type="text" id="wilaya" name="wilaya" placeholder="Enter your wilaya" required>
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label for="address">Full Address *</label>
+                                <textarea id="address" name="address" placeholder="Enter your complete address" required></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h3>Order Details</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="quantity">Quantity *</label>
+                                <select id="quantity" name="quantity" required>
+                                    <option value="">Select quantity</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+                                <div id="quantityError" style="color:#ff4444; font-size:0.95em; margin-top:6px; display:none;">Please select a quantity to continue.</div>
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label for="notes">Additional Notes</label>
+                                <textarea id="notes" name="notes" placeholder="Any special instructions or notes for your order"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="order-button" id="orderButton">
+                        <span id="buttonText">Place Order</span>
+                    </button>
+                </form>
+                
+                <div class="loading" id="loading">
+                    <i class="fa-solid fa-spinner fa-spin"></i> Processing your order...
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Success Overlay -->
+    <div class="success-overlay" id="successOverlay">
+        <div class="success-card">
+            <div class="success-icon">
+                <i class="fa-solid fa-check-circle"></i>
+            </div>
+            <h2 class="success-title">Order Placed Successfully!</h2>
+            <p class="success-message">
+                Thank you for your order! We have received your request and will contact you soon to confirm the details and arrange delivery.
+            </p>
+            <div class="success-buttons">
+                <button class="success-btn primary" onclick="goToMarket()">
+                    <i class="fa-solid fa-shopping-cart"></i> Continue Shopping
+                </button>
+                <button class="success-btn secondary" onclick="closeSuccess()">
+                    <i class="fa-solid fa-home"></i> Go Home
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sold Out Overlay -->
+    <div class="success-overlay" id="soldOutOverlay" style="display: none;">
+        <div class="success-card">
+            <div class="success-icon">
+                <i class="fa-solid fa-triangle-exclamation" style="color: #ff4444;"></i>
+            </div>
+            <h2 class="success-title" style="color: #ff4444;">Product Unavailable</h2>
+            <p class="success-message">
+                Unfortunately, the quantity you requested is no longer available at this time.<br><br>
+                <span style="color:#00ff88;">We apologize for the inconvenience.</span><br>
+                Please select a different quantity or explore our other products.<br><br>
+                <span style="font-size:1rem;color:#ccc;">If you need assistance, our support team is here to help you find the best solution.</span>
+            </p>
+            <div class="success-buttons">
+                <button class="success-btn primary" onclick="window.location.reload()">
+                    <i class="fa-solid fa-arrow-rotate-left"></i> Back to Order
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Invalid Quantity Overlay -->
+    <div class="success-overlay" id="invalidQuantityOverlay" style="display: none;">
+        <div class="success-card">
+            <div class="success-icon">
+                <i class="fa-solid fa-exclamation-circle" style="color: #ffc107;"></i>
+            </div>
+            <h2 class="success-title" style="color: #ffc107;">Invalid Quantity</h2>
+            <p class="success-message">
+                The quantity you selected is not available.<br><br>
+                <span style="color:#00ff88;"><b>Only <span id="invalidQuantityRest">0</span> left in stock.</b></span><br>
+                Please select a valid quantity and try again.<br><br>
+                <span style="font-size:1rem;color:#ccc;">If you need assistance, our support team is here to help you find the best solution.</span>
+            </p>
+            <div class="success-buttons">
+                <button class="success-btn primary" onclick="window.location.reload()">
+                    <i class="fa-solid fa-arrow-rotate-left"></i> Back to Order
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Error Overlay -->
+    <div class="success-overlay" id="errorOverlay" style="display: none;">
+        <div class="success-card">
+            <div class="success-icon">
+                <i class="fa-solid fa-circle-xmark" style="color: #ff4444;"></i>
+            </div>
+            <h2 class="success-title" style="color: #ff4444;">Error</h2>
+            <p class="success-message">
+                An unexpected error occurred. Please try again or contact support if the problem persists.
+            </p>
+            <div class="success-buttons">
+                <button class="success-btn primary" onclick="window.location.reload()">
+                    <i class="fa-solid fa-arrow-rotate-left"></i> Try Again
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Supabase JS library before any script that uses it -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script src="config.js"></script>
+    <script>
+        // Initialize Supabase client
+        const supabaseUrl = 'https://duefiijdfxjhdbiconvv.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR1ZWZpaWpkZnhqaGRiaWNvbnZ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3ODUzMDMsImV4cCI6MjA2ODM2MTMwM30.6-w6v3Z9jZ1DV5xRLOlkfGgsV2ije58j4hIz6XRgvj4';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        // Page Elements Animation
+        function startPageAnimations() {
+            const nav = document.querySelector('nav');
+            const orderHeader = document.getElementById('orderHeader');
+            const orderContent = document.getElementById('orderContent');
+            
+            // Animate navigation first
+            setTimeout(() => {
+                nav.classList.add('show');
+            }, 100);
+            
+            // Animate order header
+            setTimeout(() => {
+                orderHeader.classList.add('show');
+            }, 300);
+            
+            // Animate order content
+            setTimeout(() => {
+                orderContent.classList.add('show');
+            }, 600);
+        }
+        
+        // Start animation when page loads
+        window.addEventListener('load', startPageAnimations);
+        
+        // Success overlay functions
+        function showOrderSuccess() {
+            const overlay = document.getElementById('successOverlay');
+            overlay.classList.add('show');
+            
+            // Hide loading
+            const loading = document.getElementById('loading');
+            loading.classList.remove('show');
+            
+            // Reset button state
+            const button = document.getElementById('orderButton');
+            const buttonText = document.getElementById('buttonText');
+            button.disabled = false;
+            buttonText.textContent = 'Place Order';
+        }
+        
+        function closeSuccess() {
+            const overlay = document.getElementById('successOverlay');
+            overlay.classList.remove('show');
+            window.location.href = 'index.html';
+        }
+        
+        function goToMarket() {
+            const overlay = document.getElementById('successOverlay');
+            overlay.classList.remove('show');
+            window.location.href = 'market.html';
+        }
+        
+        // Get product information from URL parameters
+        function getProductInfo() {
+            const params = new URLSearchParams(window.location.search);
+            const productName = params.get('product') || 'Product';
+            const productPrice = params.get('price') || '0';
+            
+            document.getElementById('productName').textContent = productName;
+            document.getElementById('productPrice').textContent = `${productPrice} DA`;
+            document.getElementById('totalPrice').textContent = `${productPrice} DA`;
+            
+            return { productName, productPrice };
+        }
+        
+        // Auto-fill user information if signed in
+        function autoFillUserInfo() {
+            const userData = localStorage.getItem('userData');
+            const userToken = localStorage.getItem('userToken');
+            
+            if (userData && userToken) {
+                try {
+                    const user = JSON.parse(userData);
+                    
+                    document.getElementById('fullName').value = user.fullName || '';
+                    document.getElementById('phone').value = user.phone || '';
+                    document.getElementById('email').value = user.email || '';
+                    document.getElementById('address').value = user.address || '';
+                    document.getElementById('wilaya').value = user.wilaya || '';
+                    
+                    // Show notice that info was auto-filled
+                    document.getElementById('userInfoNotice').style.display = 'block';
+                    
+                } catch (error) {
+                    console.error('Error parsing user data:', error);
+                    // showGuestNotice(); // Removed guest user notice
+                }
+            } else {
+                // showGuestNotice(); // Removed guest user notice
+            }
+        }
+        
+        // Show guest user notice
+        function showGuestNotice() {
+            // document.getElementById('guestUserNotice').style.display = 'block'; // Removed guest user notice
+            document.getElementById('userInfoNotice').style.display = 'none';
+        }
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            getProductInfo();
+            autoFillUserInfo();
+        });
+        
+        // Update total price when quantity changes
+        document.getElementById('quantity').addEventListener('change', function() {
+            const quantity = parseInt(this.value) || 1;
+            const basePrice = parseFloat(document.getElementById('productPrice').textContent.replace(' DA', '')) || 0;
+            const total = quantity * basePrice;
+            document.getElementById('totalPrice').textContent = `${total.toFixed(2)} DA`;
+        });
+
+        // Hide error on change
+        document.getElementById('quantity').addEventListener('change', function() {
+            if (this.value) {
+                this.style.borderColor = '';
+                document.getElementById('quantityError').style.display = 'none';
+            }
+        });
+        
+        // Add this function to robustly handle webhook response and update product quantity
+        async function handleWebhookResponse(response) {
+            try {
+                const responseText = await response.text();
+                let data;
+                try {
+                    const parsed = JSON.parse(responseText);
+
+                    // n8n array-wrapped output with embedded JSON as a string
+                    if (Array.isArray(parsed) && parsed[0] && parsed[0].output) {
+                        data = JSON.parse(parsed[0].output);
+                    } else if (parsed.message && typeof parsed.message === 'string') {
+                        // If message is a stringified JSON, parse it
+                        data = JSON.parse(parsed.message);
+                    } else {
+                        data = parsed;
+                    }
+                } catch (e) {
+                    console.error("Failed to parse webhook response:", responseText);
+                    return null;
+                }
+
+                // Now extract new quantity from data.data["new quantity"]
+                const newQuantity = data.data && (data.data["Quantity rest"] || data.data["new quantity"]);
+                if (newQuantity !== undefined) {
+                    // Get the product name from the response
+                    const productName = (data.data && (data.data["Name of product"] || data.data.product_name || data.data.productName)) ||
+                                        data["Name of product"] || data.product_name || data.productName;
+                    if (productName) {
+                        // Update product quantity in Supabase
+                        const { data: products, error: fetchError } = await supabase
+                            .from('products')
+                            .select('*')
+                            .eq('name', productName)
+                            .limit(1);
+                        if (!fetchError && products && products.length > 0) {
+                            const product = products[0];
+                            if (parseInt(newQuantity) > 0) {
+                                await supabase
+                                    .from('products')
+                                    .update({ quantity: parseInt(newQuantity) })
+                                    .eq('id', product.id);
+                            } else {
+                                await supabase
+                                    .from('products')
+                                    .delete()
+                                    .eq('id', product.id);
+                            }
+                        }
+                        // Update localStorage for compatibility
+                        const productsLS = JSON.parse(localStorage.getItem('amtech_products') || '[]');
+                        const productIndex = productsLS.findIndex(p => p.name === productName);
+                        if (productIndex !== -1) {
+                            productsLS[productIndex]["quantity"] = parseInt(newQuantity);
+                            productsLS[productIndex]["new quantity"] = parseInt(newQuantity);
+                            localStorage.setItem('amtech_products', JSON.stringify(productsLS));
+                            console.log(`Updated quantity for ${productName} to ${newQuantity}`);
+                        }
+                    }
+                }
+                return data;
+            } catch (error) {
+                console.error("Error handling webhook response:", error);
+                return null;
+            }
+        }
+        
+        // Form submission
+        document.getElementById('orderForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            // Validate quantity selection
+            const quantitySelect = document.getElementById('quantity');
+            const quantityError = document.getElementById('quantityError');
+            if (!quantitySelect.value) {
+                quantitySelect.style.borderColor = '#ff4444';
+                quantityError.style.display = 'block';
+                quantitySelect.focus();
+                return;
+            } else {
+                quantitySelect.style.borderColor = '';
+                quantityError.style.display = 'none';
+            }
+            
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            // Get product info
+            const productInfo = getProductInfo();
+            // Fetch product from Supabase
+            const { data: products, error } = await supabase
+                .from('products')
+                .select('*')
+                .eq('name', productInfo.productName)
+                .limit(1);
+
+            if (error || !products || products.length === 0) {
+                showErrorOverlay('Product not found or unavailable.');
+                return;
+            }
+
+            const productObj = products[0];
+            const quantity_available = productObj.quantity;
+            const quantity_chosen = parseInt(data.quantity) || 1;
+            
+            // Show loading state
+            const button = document.getElementById('orderButton');
+            const buttonText = document.getElementById('buttonText');
+            const loading = document.getElementById('loading');
+            
+            button.disabled = true;
+            buttonText.textContent = 'Processing Order...';
+            loading.classList.add('show');
+            
+            try {
+                // Prepare data for n8n webhook
+                const webhookData = {
+                    action: "order",
+                    id: Date.now().toString(),
+                    "name of client": data.fullName.trim(),
+                    "name of product": productInfo.productName,
+                    number: data.phone.trim(),
+                    address: data.address.trim(),
+                    wilaya: data.wilaya.trim(),
+                    quantity_chosen,
+                    quantity_available
+                };
+                console.log('Sending order data:', webhookData);
+                // Send to n8n webhook with timeout
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 second timeout
+                
+                const response = await fetch("https://hyuga6354.app.n8n.cloud/webhook/amtech-webhook", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(webhookData),
+                    signal: controller.signal
+                });
+                
+                clearTimeout(timeoutId);
+                
+                console.log('Response status:', response.status);
+                console.log('Response headers:', Object.fromEntries(response.headers));
+                
+                if (response.ok) {
+                    const webhookData = await handleWebhookResponse(response);
+                    if (webhookData && webhookData.message && webhookData.message.toLowerCase().includes('invalid quantity')) {
+                        showInvalidQuantityMessage(webhookData.data && webhookData.data["Quantity rest"]);
+                    } else if (webhookData && webhookData.message && webhookData.message.toLowerCase().includes('product is sold out')) {
+                        showSoldOutMessage();
+                    } else if (webhookData && webhookData.success === false) {
+                        showErrorOverlay(webhookData.message || "Order failed.");
+                    } else {
+                                showOrderSuccess();
+                    }
+                } else {
+                    const errorText = await response.text();
+                    console.error('Order failed:', errorText);
+                    showErrorOverlay('Failed to place order. Please try again.');
+                }
+                
+            } catch (error) {
+                console.error('Order error:', error);
+                
+                let errorMessage = 'An unexpected error occurred. Please try again.';
+                
+                if (error.name === 'AbortError') {
+                    errorMessage = 'Request timed out. The server is taking too long to respond. Please try again.';
+                } else if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                    errorMessage = 'Network error: Unable to connect to the server. Please check your internet connection.';
+                } else if (error.message.includes('CORS')) {
+                    errorMessage = 'CORS error: The server is not allowing requests from this domain.';
+                } else {
+                    errorMessage = `Failed to place order: ${error.message}`;
+                }
+                
+                showErrorOverlay(errorMessage);
+            } finally {
+                // Reset button state
+                button.disabled = false;
+                buttonText.textContent = 'Place Order';
+                loading.classList.remove('show');
+            }
+        });
+
+        // Show sold out overlay
+        function showSoldOutMessage() {
+            let overlay = document.getElementById('soldOutOverlay');
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.id = 'soldOutOverlay';
+                overlay.className = 'success-overlay show';
+                overlay.innerHTML = `
+                    <div class='success-card'>
+                        <div class='success-icon'>
+                            <i class='fa-solid fa-triangle-exclamation' style='color: #ff4444;'></i>
+                        </div>
+                        <h2 class='success-title' style='color: #ff4444;'>Product Unavailable</h2>
+                        <p class='success-message'>
+                            Unfortunately, the quantity you requested is no longer available at this time.<br><br>
+                            <span style='color:#00ff88;'>We apologize for the inconvenience.</span><br>
+                            Please select a different quantity or explore our other products.<br><br>
+                            <span style='font-size:1rem;color:#ccc;'>If you need assistance, our support team is here to help you find the best solution.</span>
+                        </p>
+                        <div class='success-buttons'>
+                            <button class='success-btn primary' onclick='window.location.reload()'>
+                                <i class='fa-solid fa-arrow-rotate-left'></i> Back to Order
+                            </button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(overlay);
+            } else {
+                overlay.classList.add('show');
+                overlay.style.display = 'flex';
+            }
+        }
+
+        // Add a new function to show the invalid quantity message
+        function showInvalidQuantityMessage(quantityRest) {
+            let overlay = document.getElementById('invalidQuantityOverlay');
+            // Only show the line if the value is a valid, positive number
+            let showQuantity = (typeof quantityRest === 'number' && !isNaN(quantityRest) && quantityRest > 0);
+            let quantityLine = showQuantity ? `<span style='color:#00ff88;'><b>Only <span id='invalidQuantityRest'>${quantityRest}</span> left in stock.</b></span><br>` : '';
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.id = 'invalidQuantityOverlay';
+                overlay.className = 'success-overlay show';
+                overlay.innerHTML = `
+                    <div class='success-card'>
+                        <div class='success-icon'>
+                            <i class='fa-solid fa-exclamation-circle' style='color: #ffc107;'></i>
+                        </div>
+                        <h2 class='success-title' style='color: #ffc107;'>Invalid Quantity</h2>
+                        <p class='success-message'>
+                            The quantity you selected is not available.<br><br>
+                            ${quantityLine}
+                            Please select a valid quantity and try again.<br><br>
+                            <span style='font-size:1rem;color:#ccc;'>If you need assistance, our support team is here to help you find the best solution.</span>
+                        </p>
+                        <div class='success-buttons'>
+                            <button class='success-btn primary' onclick='window.location.reload()'>
+                                <i class='fa-solid fa-arrow-rotate-left'></i> Back to Order
+                            </button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(overlay);
+            } else {
+                overlay.classList.add('show');
+                overlay.style.display = 'flex';
+                overlay.querySelector('.success-message').innerHTML = `
+                    The quantity you selected is not available.<br><br>
+                    ${quantityLine}
+                    Please select a valid quantity and try again.<br><br>
+                    <span style='font-size:1rem;color:#ccc;'>If you need assistance, our support team is here to help you find the best solution.</span>
+                `;
+            }
+        }
+
+        // Add a generic error overlay function
+        function showErrorOverlay(errorMessage) {
+            let overlay = document.getElementById('errorOverlay');
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.id = 'errorOverlay';
+                overlay.className = 'success-overlay show';
+                overlay.innerHTML = `
+                    <div class='success-card'>
+                        <div class='success-icon'>
+                            <i class='fa-solid fa-circle-xmark' style='color: #ff4444;'></i>
+                        </div>
+                        <h2 class='success-title' style='color: #ff4444;'>Error</h2>
+                        <p class='success-message'>
+                            ${errorMessage}<br><br>
+                            <span style='color:#00ff88;'>Please try again or contact support if the problem persists.</span><br><br>
+                            <span style='font-size:1rem;color:#ccc;'>If you need assistance, our support team is here to help you.</span>
+                        </p>
+                        <div class='success-buttons'>
+                            <button class='success-btn primary' onclick='window.location.reload()'>
+                                <i class='fa-solid fa-arrow-rotate-left'></i> Try Again
+                            </button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(overlay);
+            } else {
+                overlay.innerHTML = `
+                    <div class='success-card'>
+                        <div class='success-icon'>
+                            <i class='fa-solid fa-circle-xmark' style='color: #ff4444;'></i>
+                        </div>
+                        <h2 class='success-title' style='color: #ff4444;'>Error</h2>
+                        <p class='success-message'>
+                            ${errorMessage}<br><br>
+                            <span style='color:#00ff88;'>Please try again or contact support if the problem persists.</span><br><br>
+                            <span style='font-size:1rem;color:#ccc;'>If you need assistance, our support team is here to help you.</span>
+                        </p>
+                        <div class='success-buttons'>
+                            <button class='success-btn primary' onclick='window.location.reload()'>
+                                <i class='fa-solid fa-arrow-rotate-left'></i> Try Again
+                            </button>
+                        </div>
+                    </div>
+                `;
+                overlay.classList.add('show');
+                overlay.style.display = 'flex';
+            }
+        }
+    </script>
+</body>
+</html> 

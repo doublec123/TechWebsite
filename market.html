@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <title>Market - AMTECH</title>
+    <style>
+        body{
+            background-color: #000;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        }
+        
+        /* Main content container */
+        .main-content {
+            min-height: 100vh;
+            position: relative;
+            padding-top: 100px;
+        }
+        
+        nav{
+            width: 100vw;
+            height: 10vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 50px;
+            font-size: 20px;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            z-index: 100;
+            opacity: 0;
+            transform: translateY(-50px);
+            transition: all 1s ease;
+            background: transparent;
+            border: none;
+        }
+        nav .nav-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            gap: 40px;
+            position: relative;
+        }
+        .burger-menu {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            z-index: 1200;
+            margin-left: 10px;
+        }
+        .burger-bar {
+            width: 28px;
+            height: 4px;
+            background: #00ff88;
+            margin: 3px 0;
+            border-radius: 2px;
+            transition: all 0.3s cubic-bezier(.4,2,.6,1);
+        }
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 70vw;
+            max-width: 320px;
+            height: 100vh;
+            background: #111;
+            box-shadow: 2px 0 24px #00ff8822;
+            z-index: 2000;
+            flex-direction: column;
+            padding: 60px 30px 30px 30px;
+            gap: 30px;
+            transform: translateX(-100%);
+            transition: transform 0.35s cubic-bezier(.4,2,.6,1);
+        }
+        .mobile-nav.show {
+            display: flex;
+            transform: translateX(0);
+        }
+        .mobile-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        .mobile-nav li {
+            font-size: 1.3rem;
+            color: #00ff88;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .mobile-nav li:hover {
+            color: #fff;
+        }
+        .mobile-nav .close-mobile-nav {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            font-size: 1.7rem;
+            color: #00ff88;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .mobile-nav .close-mobile-nav:hover {
+            color: #fff;
+        }
+        
+        nav.show{
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        nav ul{
+            list-style: none;
+            display: flex;
+            gap: 30px;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            left: 0;
+            transform: none;
+            z-index: 999;
+        }
+        
+        nav li{
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        nav li:hover{
+            color: #00ff88;
+        }
+        
+        /* Market Page Styles */
+        .market-header{
+            text-align: center;
+            margin-bottom: 60px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease;
+        }
+        
+        .market-header.show{
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .market-header h1{
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: #00ff88;
+        }
+        
+        .market-header p{
+            font-size: 1.2rem;
+            color: #ccc;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .products-container{
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s ease 0.3s;
+        }
+        
+        .products-container.show{
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .products-grid{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        
+        .product-card{
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .product-card:hover{
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 255, 136, 0.2);
+            border-color: #00ff88;
+        }
+        
+        .product-image{
+            width: 200px;
+            height: 200px;
+            border-radius: 15px;
+            margin: 0 auto 20px;
+            overflow: hidden;
+            background: linear-gradient(45deg, #00ff88, #00cc6a);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .product-image img{
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 15px;
+        }
+        
+        .product-image.no-image{
+            font-size: 4rem;
+            color: #000;
+        }
+        
+        .product-name{
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+        
+        .product-description{
+            color: #ccc;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .product-price{
+            font-size: 2rem;
+            font-weight: bold;
+            color: #00ff88;
+            margin-bottom: 25px;
+        }
+        
+        .buy-button{
+            background: linear-gradient(45deg, #00ff88, #00cc6a);
+            border: none;
+            border-radius: 10px;
+            color: #000;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .buy-button:hover{
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 255, 136, 0.3);
+        }
+        
+        /* Footer */
+        footer{
+            background: rgba(255, 255, 255, 0.05);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 50px 0;
+            margin-top: 80px;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s ease 0.6s;
+        }
+        
+        footer.show{
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .footer-content{
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+        
+        .footer-section h3{
+            color: #00ff88;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+        }
+        
+        .footer-section p,
+        .footer-section a{
+            color: #ccc;
+            text-decoration: none;
+            line-height: 1.8;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-section a:hover{
+            color: #00ff88;
+        }
+        
+        .social-links{
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .social-links a{
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover{
+            background: #00ff88;
+            color: #000;
+            transform: translateY(-3px);
+        }
+        
+        /* Guest Order Modal */
+        .modal-overlay{
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.show{
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-container{
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 90%;
+            transform: scale(0.8);
+            transition: all 0.3s ease;
+        }
+        
+        .modal-overlay.show .modal-container{
+            transform: scale(1);
+        }
+        
+        .modal-icon{
+            font-size: 4rem;
+            color: #00ff88;
+            margin-bottom: 20px;
+        }
+        
+        .modal-title{
+            font-size: 1.8rem;
+            color: #fff;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+        
+        .modal-message{
+            color: #ccc;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        
+        .modal-buttons{
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .modal-btn{
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+        
+        .modal-btn.primary{
+            background: linear-gradient(45deg, #00ff88, #00cc6a);
+            color: #000;
+        }
+        
+        .modal-btn.primary:hover{
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 255, 136, 0.3);
+        }
+        
+        .modal-btn.secondary{
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .modal-btn.secondary:hover{
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+        
+        /* Product Modal Styles */
+        .product-modal-overlay{
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .product-modal-overlay.show{
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .product-modal-container{
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.8);
+            transition: all 0.3s ease;
+        }
+        
+        .product-modal-overlay.show .product-modal-container{
+            transform: scale(1);
+        }
+        
+        .product-modal-header{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .product-modal-title{
+            font-size: 2rem;
+            color: #00ff88;
+            font-weight: bold;
+        }
+        
+        .product-modal-close{
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .product-modal-close:hover{
+            color: #00ff88;
+        }
+        
+        .product-modal-content{
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .product-modal-video{
+            width: 100%;
+            border-radius: 15px;
+            overflow: hidden;
+            background: #000;
+        }
+        
+        .product-modal-video video{
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .product-modal-info{
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .product-modal-price{
+            font-size: 2.5rem;
+            color: #00ff88;
+            font-weight: bold;
+        }
+        
+        .product-modal-description{
+            color: #ccc;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+        
+        .product-modal-characteristics{
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .product-modal-characteristics h4{
+            color: #00ff88;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+        
+        .characteristics-list{
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .characteristics-list li{
+            color: #ccc;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .characteristics-list li:last-child{
+            border-bottom: none;
+        }
+        
+        .characteristics-list .characteristic-label{
+            font-weight: bold;
+            color: #fff;
+        }
+        
+        .product-modal-actions{
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .product-modal-btn{
+            padding: 15px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 150px;
+        }
+        
+        .product-modal-btn.primary{
+            background: linear-gradient(45deg, #00ff88, #00cc6a);
+            color: #000;
+        }
+        
+        .product-modal-btn.primary:hover{
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 255, 136, 0.3);
+        }
+        
+        .product-modal-btn.secondary{
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .product-modal-btn.secondary:hover{
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+        
+        /* Responsive Design for Product Modal */
+        @media (max-width: 768px) {
+            .product-modal-content{
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .product-modal-container{
+                padding: 30px;
+                max-width: 95%;
+            }
+            
+            .product-modal-title{
+                font-size: 1.5rem;
+            }
+            
+            .product-modal-price{
+                font-size: 2rem;
+            }
+            
+            .product-modal-actions{
+                flex-direction: column;
+            }
+            
+            .product-modal-btn{
+                width: 100%;
+            }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .market-header h1{
+                font-size: 3rem;
+            }
+            
+            .products-grid{
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 25px;
+            }
+            
+            nav{
+                padding: 0 30px;
+            }
+            
+            nav ul{
+                gap: 25px;
+            }
+            
+            .signin-btn{
+                font-size: 16px;
+                padding: 10px 18px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .market-header h1{
+                font-size: 2.5rem;
+            }
+            
+            .market-header p{
+                font-size: 1rem;
+            }
+            
+            .products-grid{
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .product-card{
+                padding: 25px;
+            }
+            
+            .product-image{
+                width: 150px;
+                height: 150px;
+            }
+            
+            .product-image.no-image{
+                font-size: 3rem;
+            }
+            
+            nav{
+                width: 100%;
+                height: 8vh;
+                padding: 0 20px;
+                font-size: 16px;
+            }
+            
+            nav ul{
+                gap: 20px;
+            }
+            
+            .signin-btn{
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .market-header h1{
+                font-size: 2rem;
+            }
+            
+            .product-card{
+                padding: 20px;
+            }
+            
+            .product-image{
+                width: 120px;
+                height: 120px;
+            }
+            
+            .product-image.no-image{
+                font-size: 2.5rem;
+            }
+            
+            .product-name{
+                font-size: 1.3rem;
+            }
+            
+            .product-price{
+                font-size: 1.5rem;
+            }
+            
+            .buy-button{
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+            
+            nav{
+                width: 100%;
+                height: 7vh;
+                padding: 0 15px;
+                font-size: 14px;
+            }
+            
+            nav ul{
+                gap: 15px;
+            }
+            
+            .signin-btn{
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+            
+            .modal-container{
+                padding: 30px;
+                max-width: 400px;
+            }
+            
+            .modal-title{
+                font-size: 1.5rem;
+            }
+            
+            .modal-message{
+                font-size: 1rem;
+            }
+            
+            .modal-buttons{
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .modal-btn{
+                width: 100%;
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+        }
+        .search-icon{
+            position: static;
+            top: unset;
+            right: unset;
+            font-size: 22px;
+            cursor: pointer;
+            color: #00ff88;
+            background: rgba(0,0,0,0.7);
+            border-radius: 50%;
+            box-shadow: 0 4px 16px rgba(0,255,136,0.15), 0 0 8px #00ff8844;
+            padding: 10px;
+            transition: box-shadow 0.3s, color 0.3s, background 0.3s, transform 0.3s;
+            z-index: 1100;
+            margin-left: 20px;
+        }
+        .search-icon:hover{
+            color: #fff;
+            background: #00ff88;
+            box-shadow: 0 8px 32px rgba(0,255,136,0.25), 0 0 16px #00ff8899;
+            transform: scale(1.12) translateY(-2px);
+        }
+        .search-container{
+            position: static;
+            right: unset;
+            top: unset;
+            display: flex;
+            background: #111;
+            border-radius: 30px;
+            padding: 8px 16px 8px 16px;
+            box-shadow: 0 8px 32px rgba(0,255,136,0.15), 0 0 16px #00ff8855;
+            z-index: 1100;
+            min-width: 220px;
+            align-items: center;
+            gap: 10px;
+            border: 1.5px solid #00ff88;
+            opacity: 0;
+            transform: translateY(-10px) scale(0.98);
+            pointer-events: none;
+            transition: opacity 0.35s cubic-bezier(.4,2,.6,1), transform 0.35s cubic-bezier(.4,2,.6,1);
+        }
+        .search-container.show{
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+        .search-input{
+            border: none;
+            outline: none;
+            background: transparent;
+            color: #00ff88;
+            font-size: 18px;
+            width: 180px;
+            padding: 5px 0;
+            font-family: inherit;
+            transition: color 0.3s;
+        }
+        .search-input::placeholder{
+            color: #44ffbb;
+            opacity: 0.7;
+        }
+        .close-search{
+            color: #00ff88;
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 20px;
+            transition: color 0.3s, transform 0.3s;
+        }
+        .close-search:hover{
+            color: #fff;
+            transform: rotate(90deg) scale(1.2);
+        }
+        @media (max-width: 1024px) {
+            nav{
+                padding: 0 30px;
+            }
+            nav .nav-content {
+                gap: 20px;
+            }
+            .search-input{
+                width: 120px;
+            }
+        }
+        @media (max-width: 768px) {
+            nav .nav-content {
+                justify-content: space-between;
+                align-items: center;
+                position: relative;
+                flex-direction: row;
+            }
+            .burger-menu {
+                display: flex;
+                position: absolute;
+                left: 0;
+                top: 50%;
+                transform: translateY(-50%);
+                z-index: 1300;
+            }
+            nav .nav-content ul {
+                display: none;
+            }
+            .search-icon{
+                display: none !important;
+            }
+            .search-container{
+                display: flex !important;
+                opacity: 1 !important;
+                pointer-events: auto !important;
+                position: static;
+                flex: 0;
+                margin: 0 auto;
+                min-width: 40vw;
+                max-width: 60vw;
+                padding: 4px 8px 4px 12px;
+                font-size: 15px;
+                z-index: 1200;
+                box-shadow: 0 8px 32px rgba(0,255,136,0.15), 0 0 16px #00ff8855;
+                border: 1.5px solid #00ff88;
+                background: #111;
+                margin-top: 0;
+            }
+            .close-search {
+                display: none !important;
+            }
+            .search-input{
+                width: 100%;
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <nav>
+            <div class="nav-content">
+            <ul>
+                <li onclick="window.location.href='index.html'">Home</li>
+                <li onclick="window.location.href='market.html'">Market</li>
+                <li onclick="window.location.href='about.html'">About</li>
+                <li onclick="window.location.href='contact.html'">Contact</li>
+            </ul>
+                <div class="burger-menu" id="burgerMenu" onclick="toggleMobileNav()">
+                    <div class="burger-bar"></div>
+                    <div class="burger-bar"></div>
+                    <div class="burger-bar"></div>
+                </div>
+                <i class="fa-solid fa-magnifying-glass search-icon" onclick="toggleSearch()"></i>
+                <div class="search-container" id="searchContainer">
+                    <input type="text" placeholder="Search products..." class="search-input" id="searchInput">
+                    <i class="fa-solid fa-times close-search" onclick="toggleSearch()"></i>
+                </div>
+            </div>
+        </nav>
+        <div class="mobile-nav" id="mobileNav">
+            <i class="fa-solid fa-times close-mobile-nav" onclick="toggleMobileNav()"></i>
+            <ul>
+                <li onclick="window.location.href='index.html'">Home</li>
+                <li onclick="window.location.href='market.html'">Market</li>
+                <li onclick="window.location.href='about.html'">About</li>
+                <li onclick="window.location.href='contact.html'">Contact</li>
+            </ul>
+        </div>
+        
+        <div class="market-header" id="marketHeader">
+            <h1>Our Products</h1>
+            <p>Discover our latest collection of high-quality products available for delivery across Algeria</p>
+        </div>
+        
+        <div class="products-container" id="productsContainer">
+            <div class="products-grid">
+                <!-- Products will be loaded dynamically from admin panel -->
+            </div>
+            </div>
+        </div>
+        
+        <footer id="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>AMTECH</h3>
+                    <p>Your trusted partner for premium technology products in Algeria. We deliver quality and innovation to your doorstep.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                        <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <p><a href="index.html">Home</a></p>
+                    <p><a href="market.html">Market</a></p>
+                    <p><a href="about.html">About Us</a></p>
+                    <p><a href="contact.html">Contact</a></p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <p><i class="fa-solid fa-phone"></i> +213 123 456 789</p>
+                    <p><i class="fa-solid fa-envelope"></i> info@amtech.dz</p>
+                    <p><i class="fa-solid fa-location-dot"></i> Algiers, Algeria</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Services</h3>
+                    <p>Free Delivery</p>
+                    <p>58 Wilayas Coverage</p>
+                    <p>Secure Payment</p>
+                    <p>24/7 Support</p>
+                </div>
+            </div>
+        </footer>
+        
+        <!-- Guest Order Modal -->
+        <div class="modal-overlay" id="guestModal">
+            <div class="modal-container">
+                <div class="modal-icon">
+                    <i class="fa-solid fa-user-plus"></i>
+                </div>
+                <div class="modal-title">Continue as Guest?</div>
+                <div class="modal-message">
+                    You can order as a guest or sign in for a better experience with faster checkout and order tracking.
+                </div>
+                <div class="modal-buttons">
+                    <button class="modal-btn primary" onclick="continueAsGuest()">Continue Anyway</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Product Modal -->
+        <div class="product-modal-overlay" id="productModal">
+            <div class="product-modal-container">
+                <div class="product-modal-header">
+                    <h2 class="product-modal-title" id="modalProductName">Product Name</h2>
+                    <button class="product-modal-close" onclick="closeProductModal()">
+                        <i class="fa-solid fa-times"></i>
+                    </button>
+    </div>
+    
+                <div class="product-modal-content">
+                    <div class="product-modal-video">
+                        <video id="modalProductVideo" autoplay muted loop>
+                            <source src="" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    
+                    <div class="product-modal-info">
+                        <div class="product-modal-price" id="modalProductPrice">0.00 DA</div>
+                        <div class="product-modal-description" id="modalProductDescription">Product description</div>
+                        
+                        <div class="product-modal-characteristics">
+                            <h4>Product Characteristics</h4>
+                            <ul class="characteristics-list" id="modalProductCharacteristics">
+                                <!-- Characteristics will be loaded dynamically -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="product-modal-actions">
+                    <button class="product-modal-btn primary" onclick="buyProductFromModal()">
+                        <i class="fa-solid fa-shopping-cart"></i> Buy Now
+                    </button>
+                    <button class="product-modal-btn secondary" onclick="closeProductModal()">
+                        <i class="fa-solid fa-times"></i> Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script>
+        const supabaseUrl = 'https://duefiijdfxjhdbiconvv.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR1ZWZpaWpkZnhqaGRiaWNvbnZ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI3ODUzMDMsImV4cCI6MjA2ODM2MTMwM30.6-w6v3Z9jZ1DV5xRLOlkfGgsV2ije58j4hIz6XRgvj4';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+        async function fetchProducts() {
+            const { data, error } = await supabase
+                .from('products')
+                .select('*')
+                .order('id', { ascending: false });
+            if (error) {
+                console.error('Failed to fetch products:', error);
+                alert('Failed to fetch products!');
+                return [];
+            }
+            return data;
+        }
+        async function renderMarketProducts() {
+            const products = await fetchProducts();
+            const grid = document.querySelector('.products-grid');
+            grid.innerHTML = '';
+            products.forEach(product => {
+                if (product.status === 'active' && product.quantity > 0) {
+                    grid.innerHTML += `
+                        <div class="product-card">
+                            <div class="product-image">
+                                <img src="${product.image}" alt="${product.name}" />
+                            </div>
+                            <div class="product-name">${product.name}</div>
+                            <div class="product-description">${product.description || ''}</div>
+                            <div class="product-price">${product.price} DA</div>
+                            <button class="buy-button" onclick="event.stopPropagation(); buyProduct('${product.name}', '${product.price}')">Buy Now</button>
+                        </div>
+                    `;
+                }
+            });
+        }
+        renderMarketProducts();
+    </script>
+    <script>
+        // Page Elements Animation
+        function startPageAnimations() {
+            const nav = document.querySelector('nav');
+            const marketHeader = document.getElementById('marketHeader');
+            const productsContainer = document.getElementById('productsContainer');
+            const footer = document.getElementById('footer');
+            
+            // Animate navigation first
+            setTimeout(() => {
+                nav.classList.add('show');
+            }, 100);
+            
+            // Animate market header
+            setTimeout(() => {
+                marketHeader.classList.add('show');
+            }, 300);
+            
+            // Animate products container
+            setTimeout(() => {
+                productsContainer.classList.add('show');
+            }, 600);
+            
+            // Animate footer
+            setTimeout(() => {
+                footer.classList.add('show');
+            }, 900);
+        }
+        
+        // Start animation when page loads
+        window.addEventListener('load', function() {
+            startPageAnimations();
+            // loadProducts(); // This function is no longer needed
+        });
+        
+        // Global variables for modals
+        let currentProductName = '';
+        let currentProductPrice = '';
+        let currentProduct = null;
+        
+        // Show product modal
+        function showProductModal(product) {
+            currentProduct = product;
+            currentProductName = product.name;
+            currentProductPrice = product.price;
+            
+            // Update modal content
+            document.getElementById('modalProductName').textContent = product.name;
+            document.getElementById('modalProductPrice').textContent = `${product.price} DA`;
+            document.getElementById('modalProductDescription').textContent = product.description;
+            
+            // Reset video container first
+            const videoContainer = document.querySelector('.product-modal-video');
+            videoContainer.innerHTML = '<video id="modalProductVideo" autoplay muted loop><source src="" type="video/mp4">Your browser does not support the video tag.</video>';
+            
+            // Set video source (you can add video property to your products)
+            const videoElement = document.getElementById('modalProductVideo');
+            if (product.video) {
+                videoElement.src = product.video;
+                videoElement.style.display = 'block';
+            } else {
+                // Fallback to image if no video
+                videoElement.style.display = 'none';
+                videoContainer.innerHTML = `<img src="${product.image || 'https://via.placeholder.com/400x300/00ff88/000000?text=Product+Image'}" alt="${product.name}" style="width:100%;height:auto;border-radius:15px;">`;
+            }
+            
+            // Load product characteristics
+            loadProductCharacteristics(product);
+            
+            // Show modal
+            const modal = document.getElementById('productModal');
+            modal.classList.add('show');
+        }
+        
+        // Load product characteristics
+        function loadProductCharacteristics(product) {
+            const characteristicsList = document.getElementById('modalProductCharacteristics');
+            characteristicsList.innerHTML = '';
+            
+            // Default characteristics (you can customize these based on your product data)
+            const characteristics = [
+                { label: 'Brand', value: product.brand || 'AMTECH' },
+                { label: 'Category', value: product.category || 'Technology' },
+                { label: 'Model', value: product.model || product.name },
+                { label: 'Warranty', value: product.warranty || '1 Year' },
+                { label: 'Availability', value: product.quantity > 0 ? 'In Stock' : 'Out of Stock' },
+                { label: 'Delivery', value: 'Available in 58 wilayas' }
+            ];
+            
+            // Add custom characteristics if they exist
+            if (product.characteristics) {
+                characteristics.push(...product.characteristics);
+            }
+            
+            characteristics.forEach(char => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <span class="characteristic-label">${char.label}:</span>
+                    <span>${char.value}</span>
+                `;
+                characteristicsList.appendChild(li);
+            });
+        }
+        
+        // Close product modal
+        function closeProductModal() {
+            const modal = document.getElementById('productModal');
+            modal.classList.remove('show');
+            
+            // Reset video container for next use
+            const videoContainer = document.querySelector('.product-modal-video');
+            videoContainer.innerHTML = '<video id="modalProductVideo" autoplay muted loop><source src="" type="video/mp4">Your browser does not support the video tag.</video>';
+            
+            // Stop video if it exists
+            const video = document.getElementById('modalProductVideo');
+            if (video) {
+                video.pause();
+                video.currentTime = 0;
+            }
+        }
+        
+        // Buy product from modal
+        function buyProductFromModal() {
+            closeProductModal();
+            if (currentProduct) {
+                buyProduct(currentProduct.name, currentProduct.price);
+            }
+        }
+        
+        // Buy product function
+        function buyProduct(productName, price) {
+            // Redirect to order page with product information
+            const orderUrl = `order.html?product=${encodeURIComponent(productName)}&price=${encodeURIComponent(price)}`;
+            window.location.href = orderUrl;
+        }
+        
+        // Show guest modal
+        function showGuestModal() {
+            const modal = document.getElementById('guestModal');
+            modal.classList.add('show');
+        }
+        
+        // Hide guest modal
+        function hideGuestModal() {
+            const modal = document.getElementById('guestModal');
+            modal.classList.remove('show');
+        }
+        
+        // Continue as guest
+        function continueAsGuest() {
+            hideGuestModal();
+            const orderUrl = `order.html?product=${encodeURIComponent(currentProductName)}&price=${encodeURIComponent(currentProductPrice)}`;
+            window.location.href = orderUrl;
+        }
+        
+        // Close modal when clicking outside
+        document.addEventListener('click', function(event) {
+            const guestModal = document.getElementById('guestModal');
+            const productModal = document.getElementById('productModal');
+            
+            if (event.target === guestModal) {
+                hideGuestModal();
+            }
+            if (event.target === productModal) {
+                closeProductModal();
+            }
+        });
+        
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                hideGuestModal();
+                closeProductModal();
+            }
+        });
+
+        // Search functionality
+        function toggleSearch() {
+            const searchContainer = document.getElementById('searchContainer');
+            const searchInput = document.getElementById('searchInput');
+            if (searchContainer.classList.contains('show')) {
+                searchContainer.classList.remove('show');
+                searchInput.value = '';
+                // No need to call renderMarketProducts() here, as it's already called on load
+            } else {
+                searchContainer.classList.add('show');
+                searchInput.focus();
+            }
+        }
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const keyword = e.target.value.trim().toLowerCase();
+            // No need to call renderMarketProducts() here, as it's already called on load
+            if (!keyword) {
+                // If no keyword, show all active products
+                fetchProducts().then(products => {
+                    const container = document.getElementById('productsContainer');
+                    container.innerHTML = '';
+                    products.forEach(product => {
+                        if (product.status === 'active' && (typeof product.quantity !== 'number' || product.quantity > 0)) {
+                            container.innerHTML += `
+                                <div class="product-card">
+                                    <img src="${product.image}" alt="${product.name}" />
+                                    <h3>${product.name}</h3>
+                                    <p>${product.price} DA</p>
+                                    <p>${product.category}</p>
+                                    <p>Qty: ${product.quantity}</p>
+                                </div>
+                            `;
+                        }
+                    });
+                });
+                return;
+            }
+            // Filter products by name or description
+            fetchProducts().then(products => {
+                const container = document.getElementById('productsContainer');
+                container.innerHTML = '';
+                products.forEach(product => {
+                    if (product.status === 'active' && (typeof product.quantity !== 'number' || product.quantity > 0)) {
+                        if (product.name.toLowerCase().includes(keyword) || product.description.toLowerCase().includes(keyword)) {
+                            container.innerHTML += `
+                                <div class="product-card">
+                                    <img src="${product.image}" alt="${product.name}" />
+                                    <h3>${product.name}</h3>
+                                    <p>${product.price} DA</p>
+                                    <p>${product.category}</p>
+                                    <p>Qty: ${product.quantity}</p>
+                                </div>
+                            `;
+                        }
+                    }
+                });
+            });
+        });
+        // Close search when clicking outside
+        document.addEventListener('click', function(event) {
+            const searchContainer = document.getElementById('searchContainer');
+            const searchIcon = document.querySelector('.search-icon');
+            if (!searchContainer.contains(event.target) && !searchIcon.contains(event.target)) {
+                searchContainer.classList.remove('show');
+                document.getElementById('searchInput').value = '';
+                // No need to call renderMarketProducts() here, as it's already called on load
+            }
+        });
+
+        function toggleMobileNav() {
+            const mobileNav = document.getElementById('mobileNav');
+            if (mobileNav.classList.contains('show')) {
+                mobileNav.classList.remove('show');
+            } else {
+                mobileNav.classList.add('show');
+            }
+        }
+    </script>
+</body>
+</html> 

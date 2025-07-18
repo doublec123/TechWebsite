@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <title>Document</title>
+    <style>
+        body{
+            background-color: #000;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        }
+        
+        /* Main content container */
+        .main-content {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        nav{
+            width: 100vh;
+            height: 10vh;
+            position: fixed;
+            top: 0;
+            margin: auto;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 50px;
+         font-size: 20px;
+         font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            margin: auto;
+            z-index: 100;
+            opacity: 0;
+            transform: translateY(-50px);
+            transition: all 1s ease;
+        }
+        
+        nav.show{
+            opacity: 1;
+            transform: translateY(0);
+        }
+        nav ul{
+            list-style: none;
+            display: flex;
+            gap: 30px;
+            margin: 0;
+            padding: 0;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 999;
+        }
+        nav li{
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        nav li.active{
+            color: #00ff88;
+            font-weight: bold;
+            border-bottom: 2px solid #00ff88;
+            padding-bottom: 5px;
+        }
+        nav li:hover{
+            color: #00ff88;
+        }
+        .search-icon{
+            position: absolute;
+            right: -10%;
+            font-size: 20px;
+            cursor: pointer;
+            color: #fff;
+            transition: all 0.3s ease;
+            margin: 0 20px;
+        }
+        .search-icon:hover{
+            color: #f0f0f0;
+            transform: scale(1.1);
+        }
+        .search-container{
+            position: fixed;
+            right: 50px;
+            top: 8%;
+            display: none;
+            background-color: #fff;
+            border-radius: 25px;
+            padding: 10px 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 1000;
+            min-width: 250px;
+        }
+        .search-input{
+            border: none;
+            outline: none;
+            background: transparent;
+            color: #000;
+            font-size: 16px;
+            width: 220px;
+            padding: 5px;
+        }
+        .search-input::placeholder{
+            color: #666;
+        }
+        .close-search{
+            color: #666;
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 18px;
+            transition: color 0.3s ease;
+        }
+        .close-search:hover{
+            color: #000;
+        }
+        .cercle1{
+            width: 70vh;
+            height: 70vh;
+            background-color: transparent;
+            border-radius: 50%;
+            position: absolute;
+            margin: auto;
+            border: 1px solid #fff;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 1.5s ease;
+        }
+        
+        .cercle1.show{
+            opacity: 1;
+            transform: scale(1);
+        }
+        .cercle2{
+            width: 60vh;
+            height: 60vh;
+            background-color: transparent;
+            border-radius: 50%;
+            border: 1px solid #fff;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 1.5s ease 0.3s;
+        }
+        
+        .cercle2.show{
+            opacity: 1;
+            transform: scale(1);
+        }
+        .namerec{
+            width: 100vh;
+            height: 20vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 11vh;
+            background-color: black;
+            position: absolute;
+            margin: auto;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 1.2s ease 0.6s;
+        }
+        
+        .namerec.show{
+            opacity: 1;
+            transform: scale(1);
+        }
+        .min{
+            width: 70vh;
+            height: 70vh;
+            position: absolute;
+           top: 5vw;
+            opacity: 0;
+            transform: rotate(-10deg) scale(0.7);
+            transition: all 1.8s ease 0.9s;
+        }
+        
+        .min.show{
+            opacity: 1;
+            transform: rotate(0deg) scale(1);
+        }
+        
+        /* Welcome Animation Styles */
+        .welcome-overlay{
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 1s ease;
+        }
+        
+        .welcome-animation{
+            text-align: center;
+        }
+        
+        .welcome-text, .amtech-text{
+            font-size: 4rem;
+            font-weight: bold;
+            color: #fff;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+        
+        .welcome-text.show{
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .amtech-text{
+            font-size: 3rem;
+            color: #00ff88;
+            margin-top: 10px;
+        }
+        
+        .amtech-text.show{
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .welcome-overlay.fade-out{
+            opacity: 0;
+        }
+        
+        .welcome-overlay.hidden{
+            display: none;
+        }
+        
+        /* Footer Styles */
+        .footer{
+            background-color: #000;
+            color: #fff;
+            padding: 80px 0 40px 0;
+            position: relative;
+            z-index: 10;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-content{
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .section-title{
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 60px;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            font-weight: bold;
+        }
+        
+        .features-grid{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin-bottom: 80px;
+        }
+        
+        .feature-card{
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover{
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #00ff88;
+        }
+        
+        .feature-icon{
+            font-size: 3rem;
+            color: #00ff88;
+            margin-bottom: 20px;
+        }
+        
+        .feature-card h3{
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            font-weight: bold;
+        }
+        
+        .feature-card p{
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #ccc;
+        }
+        
+        .footer-bottom{
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        .footer-info{
+            display: flex;
+            gap: 60px;
+            flex-wrap: wrap;
+        }
+        
+        .company-info h3{
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: #00ff88;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            font-weight: bold;
+        }
+        
+        .company-info p{
+            color: #ccc;
+            font-size: 1rem;
+        }
+        
+        .contact-info p{
+            margin-bottom: 10px;
+            color: #ccc;
+            font-size: 1rem;
+        }
+        
+        .contact-info i{
+            color: #00ff88;
+            margin-right: 10px;
+            width: 20px;
+        }
+        
+        .social-links{
+            display: flex;
+            gap: 20px;
+        }
+        
+        .social-links a{
+            color: #fff;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .social-links a:hover{
+            color: #00ff88;
+            background: rgba(0, 255, 136, 0.1);
+            transform: translateY(-3px);
+        }
+        
+        /* Responsive Design */
+        
+                /* Large Tablets and Small Laptops */
+        @media (max-width: 1024px) {
+            nav{
+                width: 100%;
+                padding: 0 30px;
+                font-size: 18px;
+            }
+            
+            nav ul{
+                gap: 25px;
+            }
+            
+            .search-icon{
+                display: none;
+            }
+            
+            .cercle1{
+                width: 60vw;
+                height: 60vw;
+            }
+            
+            .cercle2{
+                width: 50vw;
+                height: 50vw;
+            }
+            
+            .namerec{
+                width: 100%;
+                font-size: 8vw;
+            }
+            
+            .min{
+                width: 70vw;
+                height: 70vw;
+            }
+            
+            .welcome-text{
+                font-size: 3.5rem;
+            }
+            
+            .amtech-text{
+                font-size: 2.5rem;
+            }
+            
+            .features-grid{
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 30px;
+            }
+        }
+        
+        /* Medium Tablets */
+        @media (max-width: 900px) and (min-width: 769px) {
+            nav{
+                width: 100%;
+                padding: 0 25px;
+                font-size: 17px;
+            }
+            
+            nav ul{
+                gap: 22px;
+            }
+            
+            .search-icon{
+                display: none;
+            }
+            
+            .cercle1{
+                width: 65vw;
+                height: 65vw;
+            }
+            
+            .cercle2{
+                width: 55vw;
+                height: 55vw;
+            }
+            
+            .namerec{
+                width: 100%;
+                font-size: 9vw;
+            }
+            
+            .min{
+                width: 75vw;
+                height: 75vw;
+            }
+            
+            .welcome-text{
+                font-size: 3.2rem;
+            }
+            
+            .amtech-text{
+                font-size: 2.3rem;
+            }
+            
+            .features-grid{
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+                gap: 25px;
+            }
+        }
+        
+        /* Tablets */
+        @media (max-width: 768px) {
+            nav{
+                width: 100%;
+                height: 8vh;
+                padding: 0 20px;
+                font-size: 16px;
+            }
+            
+            nav ul{
+                gap: 20px;
+            }
+            
+            .search-icon{
+                display: none;
+            }
+            
+            .search-container{
+                right: 20px;
+                min-width: 200px;
+            }
+            
+            .cercle1{
+                width: 70vw;
+                height: 70vw;
+            }
+            
+            .cercle2{
+                width: 60vw;
+                height: 60vw;
+            }
+            
+            .namerec{
+                width: 100%;
+                font-size: 10vw;
+            }
+            
+            .min{
+                width: 80vw;
+                height: 80vw;
+            }
+            
+            .welcome-text{
+                font-size: 3rem;
+            }
+            
+            .amtech-text{
+                font-size: 2rem;
+            }
+            
+            .features-grid{
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .footer-bottom{
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .footer-info{
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .section-title{
+                font-size: 2rem;
+            }
+            
+            .feature-card{
+                padding: 30px 15px;
+            }
+            
+            .feature-icon{
+                font-size: 2.5rem;
+            }
+        }
+        
+        /* Mobile Phones */
+        @media (max-width: 480px) {
+            nav{
+                width: 100%;
+                height: 7vh;
+                padding: 0 15px;
+                font-size: 14px;
+            }
+            
+            nav ul{
+                gap: 15px;
+            }
+            
+            .search-icon{
+                display: none;
+            }
+            
+            .search-container{
+                right: 15px;
+                min-width: 180px;
+                top: 10%;
+            }
+            
+            .search-input{
+                width: 150px;
+                font-size: 14px;
+            }
+            
+            .cercle1{
+                width: 85vw;
+                height: 85vw;
+            }
+            
+            .cercle2{
+                width: 75vw;
+                height: 75vw;
+            }
+            
+            .namerec{
+                width: 100%;
+                font-size: 12vw;
+                height: 15vh;
+            }
+
+            
+            .min{
+                width: 90vw;
+                height: 90vw;
+            }
+            
+            .welcome-text{
+                font-size: 2.5rem;
+            }
+            
+            .amtech-text{
+                font-size: 1.8rem;
+            }
+            
+            .section-title{
+                font-size: 1.8rem;
+                margin-bottom: 40px;
+            }
+            
+            .feature-card{
+                padding: 25px 15px;
+            }
+            
+            .feature-card h3{
+                font-size: 1.3rem;
+            }
+            
+            .feature-card p{
+                font-size: 0.9rem;
+            }
+            
+            .feature-icon{
+                font-size: 2rem;
+            }
+            
+            .company-info h3{
+                font-size: 1.5rem;
+            }
+            
+            .contact-info p{
+                font-size: 0.9rem;
+            }
+            
+            .social-links a{
+                width: 40px;
+                height: 40px;
+                font-size: 1.2rem;
+            }
+            
+            .footer{
+                padding: 60px 0 30px 0;
+            }
+        }
+        
+        /* Extra Small Mobile */
+        @media (max-width: 320px) {
+            nav{
+                font-size: 12px;
+                padding: 0 10px;
+            }
+            
+            nav ul{
+                gap: 10px;
+            }
+            
+            .search-icon{
+                display: none;
+            }
+            
+            .search-container{
+                right: 10px;
+                min-width: 160px;
+            }
+            
+            .search-input{
+                width: 130px;
+                font-size: 12px;
+            }
+            
+            .cercle1{
+                width: 90vw;
+                height: 90vw;
+            }
+            
+            .cercle2{
+                width: 80vw;
+                height: 80vw;
+            }
+            
+            .namerec{
+                font-size: 14vw;
+            }
+            
+            .min{
+                width: 95vw;
+                height: 95vw;
+            }
+            
+            .welcome-text{
+                font-size: 2rem;
+            }
+            
+            .amtech-text{
+                font-size: 1.5rem;
+            }
+            
+            .section-title{
+                font-size: 1.5rem;
+            }
+            
+            .feature-card{
+                padding: 20px 10px;
+            }
+            
+            .feature-card h3{
+                font-size: 1.1rem;
+            }
+            
+            .feature-card p{
+                font-size: 0.8rem;
+            }
+        }
+        
+        /* Landscape Mobile */
+        @media (max-height: 500px) and (orientation: landscape) {
+            nav{
+                height: 12vh;
+            }
+            
+            .cercle1{
+                width: 50vh;
+                height: 50vh;
+            }
+            
+            .cercle2{
+                width: 40vh;
+                height: 40vh;
+            }
+            
+            .namerec{
+                height: 15vh;
+                font-size: 8vh;
+            }
+
+            
+            .min{
+                width: 60vh;
+                height: 60vh;
+            }
+            
+            .welcome-text{
+                font-size: 2.5rem;
+            }
+            
+            .amtech-text{
+                font-size: 2rem;
+            }
+        }
+        
+        /* High DPI Displays */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            .feature-card{
+                border-width: 0.5px;
+            }
+            
+            .cercle1, .cercle2{
+                border-width: 0.5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-content">
+        <nav>
+            <ul id="mainNav">
+                <li class="active" onclick="window.location.href='index.html'">Home</li>
+                <li onclick="window.location.href='market.html'">Market</li>
+                <li onclick="window.location.href='about.html'">About</li>
+                <li onclick="window.location.href='contact.html'">Contact</li>
+                <!-- Admin Panel button will be injected here if needed -->
+            </ul>
+        </nav>
+        
+        <!-- Welcome Animation -->
+        <div class="welcome-overlay" id="welcomeOverlay">
+            <div class="welcome-animation" id="welcomeAnimation">
+                <div class="welcome-text" id="welcomeText">Welcome</div>
+                <div class="amtech-text" id="amtechText">to AMTECH</div>
+            </div>
+        </div>
+        
+        <div class="cercle1"></div>
+        <div class="cercle2"></div>
+        <div class="namerec">
+            <h1>AMTECH</h1>
+        </div>
+        <img src="images/main-page.png" alt="picture" class="min">
+    </div>
+    
+     <!-- Footer Section -->
+     <footer class="footer">
+        <div class="footer-content">
+            <div class="why-us-section">
+                <h2 class="section-title">Why Choose AMTECH?</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fa-solid fa-rocket"></i>
+                        </div>
+                        <h3>Innovation</h3>
+                        <p>Cutting-edge technology solutions that drive your business forward with the latest advancements.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <h3>Security</h3>
+                        <p>Enterprise-grade security protocols ensuring your data and systems are always protected.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fa-solid fa-headset"></i>
+                        </div>
+                        <h3>24/7 Support</h3>
+                        <p>Round-the-clock technical support and customer service to assist you anytime, anywhere.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+                        <h3>Performance</h3>
+                        <p>Optimized solutions designed for maximum efficiency and outstanding performance results.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+                        <h3>Expert Team</h3>
+                        <p>Experienced professionals with deep industry knowledge and proven track record.</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fa-solid fa-clock"></i>
+                        </div>
+                        <h3>Fast Delivery</h3>
+                        <p>Quick turnaround times and rapid deployment of solutions to meet your deadlines.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="footer-info">
+                    <div class="company-info">
+                        <h3>AMTECH</h3>
+                        <p>Leading technology solutions for modern businesses</p>
+                    </div>
+                    <div class="contact-info">
+                        <p><i class="fa-solid fa-envelope"></i> info@amtech.com</p>
+                        <p><i class="fa-solid fa-phone"></i> +1 (555) 123-4567</p>
+                        <p><i class="fa-solid fa-location-dot"></i> 123 Tech Street, Digital City</p>
+                        <p><a href="admin.html" style="color: #666; text-decoration: none; font-size: 0.9rem;"><i class="fa-solid fa-cog"></i> Sign In</a></p>
+                    </div>
+                </div>
+                <div class="social-links">
+                    <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+                    <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+        // Welcome Animation
+        function startWelcomeAnimation() {
+            const welcomeText = document.getElementById('welcomeText');
+            const amtechText = document.getElementById('amtechText');
+            const welcomeOverlay = document.getElementById('welcomeOverlay');
+            
+            // Show "Welcome" first
+            setTimeout(() => {
+                welcomeText.classList.add('show');
+            }, 500);
+            
+            // Show "to AMTECH" after 1.5 seconds
+            setTimeout(() => {
+                amtechText.classList.add('show');
+            }, 2000);
+            
+            // Fade out the entire overlay after 4 seconds
+            setTimeout(() => {
+                welcomeOverlay.classList.add('fade-out');
+            }, 4000);
+            
+            // Hide the overlay and start page animations after fade out
+            setTimeout(() => {
+                welcomeOverlay.classList.add('hidden');
+                startPageAnimations();
+            }, 5000);
+        }
+        
+        // Page Elements Animation
+        function startPageAnimations() {
+            const nav = document.querySelector('nav');
+            const cercle1 = document.querySelector('.cercle1');
+            const cercle2 = document.querySelector('.cercle2');
+            const namerec = document.querySelector('.namerec');
+            const min = document.querySelector('.min');
+            
+            // Animate navigation first
+            setTimeout(() => {
+                nav.classList.add('show');
+            }, 100);
+            
+            // Animate circles with staggered timing
+            setTimeout(() => {
+                cercle1.classList.add('show');
+            }, 300);
+            
+            setTimeout(() => {
+                cercle2.classList.add('show');
+            }, 600);
+            
+            // Animate company name
+            setTimeout(() => {
+                namerec.classList.add('show');
+            }, 750);
+            
+            // Animate the main image last
+            setTimeout(() => {
+                min.classList.add('show');
+            }, 900);
+        }
+        
+        // Start animation when page loads
+        window.addEventListener('load', startWelcomeAnimation);
+
+        // Add Admin Panel button to navbar if admin is remembered
+        window.addEventListener('DOMContentLoaded', function() {
+            if (localStorage.getItem('amtech_admin_logged_in') === 'true') {
+                const navUl = document.getElementById('mainNav');
+                if (navUl && !document.getElementById('adminPanelNavBtn')) {
+                    const adminBtn = document.createElement('li');
+                    adminBtn.id = 'adminPanelNavBtn';
+                    adminBtn.textContent = 'Admin Panel';
+                    adminBtn.style.cursor = 'pointer';
+                    adminBtn.onclick = function() { window.location.href = 'admin.html'; };
+                    navUl.appendChild(adminBtn);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
