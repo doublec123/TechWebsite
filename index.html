@@ -453,6 +453,7 @@
             .min{
                 width: 75vw;
                 height: 75vw;
+                margin-top: 18vw;
             }
             
             .welcome-text{
@@ -507,8 +508,9 @@
             }
             
             .min{
-                width: 80vw;
-                height: 80vw;
+                width: 70vw;
+                height: 70vw;
+                margin-top: 36vw;
             }
             
             .welcome-text{
@@ -593,8 +595,10 @@
 
             
             .min{
-                width: 90vw;
-                height: 90vw;
+                width: 80vw;
+                height: 80vw;
+                position: relative;
+                top:5vh;
             }
             
             .welcome-text{
@@ -685,8 +689,10 @@
             }
             
             .min{
-                width: 95vw;
-                height: 95vw;
+                width: 80vw;
+                height: 80vw;
+                position: relative;
+                top: 15vh;
             }
             
             .welcome-text{
@@ -765,12 +771,11 @@
 <body>
     <div class="main-content">
         <nav>
-            <ul id="mainNav">
+            <ul>
                 <li class="active" onclick="window.location.href='index.html'">Home</li>
                 <li onclick="window.location.href='market.html'">Market</li>
                 <li onclick="window.location.href='about.html'">About</li>
                 <li onclick="window.location.href='contact.html'">Contact</li>
-                <!-- Admin Panel button will be injected here if needed -->
             </ul>
         </nav>
         
@@ -787,7 +792,7 @@
         <div class="namerec">
             <h1>AMTECH</h1>
         </div>
-        <img src="main-page.png" alt="picture" class="min">
+        <img src="images/main-page.png" alt="picture" class="min">
     </div>
     
      <!-- Footer Section -->
@@ -933,21 +938,6 @@
         
         // Start animation when page loads
         window.addEventListener('load', startWelcomeAnimation);
-
-        // Add Admin Panel button to navbar if admin is remembered
-        window.addEventListener('DOMContentLoaded', function() {
-            if (localStorage.getItem('amtech_admin_logged_in') === 'true') {
-                const navUl = document.getElementById('mainNav');
-                if (navUl && !document.getElementById('adminPanelNavBtn')) {
-                    const adminBtn = document.createElement('li');
-                    adminBtn.id = 'adminPanelNavBtn';
-                    adminBtn.textContent = 'Admin Panel';
-                    adminBtn.style.cursor = 'pointer';
-                    adminBtn.onclick = function() { window.location.href = 'admin.html'; };
-                    navUl.appendChild(adminBtn);
-                }
-            }
-        });
     </script>
 </body>
 </html>
